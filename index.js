@@ -24,9 +24,36 @@ app.get("/api/hello", function (req, res) {
   res.json({greeting: 'hello API'});
 });
 
+// timestamp microservice
+app.get("/api/:date?",(req, res) =>{
+  const {date} = req.params
+  if(!date){
+    const currentDate = new Date()
+    res.json({
+      unix: currentDate.getTime(),
+      utc: currentDate.toUTCString()
+    })
+    return
+  }
+  const regex = /\W/
+  
+  const validDate = regex.test(date) ? new Date(date) : new Date(Number(date))
+  if(validDate.toUTCString() == "Invalid Date"){
+    res.json({
+      error: "Invalid Date"
+    })
+    return
+  }
+
+  res.json({
+    unix: validDate.getTime(),
+    utc: validDate.toUTCString()
+  }) 
+
+})
 
 
 // listen for requests :)
-var listener = app.listen(process.env.PORT, function () {
-  console.log('Your app is listening on port ' + listener.address().port);
+var listener = app.listen(3000, function () {
+  console.log('Your app is listening on port ' + 3000);
 });
